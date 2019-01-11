@@ -27,7 +27,7 @@ type Response struct {
 }
 
 type data struct {
-	A []string `json:"あ"`
+	A []string `json:"あ"` //Todo add "う"~"わ"
 	I []string `json:"い"`
 }
 
@@ -131,8 +131,18 @@ func makeJsonFile() {
 	ioutil.WriteFile("data.json", content, os.ModePerm) // Make json file based on scraping data
 }
 
+func isFileExists(name string) bool {
+	_, err := os.Stat(name)
+	return !os.IsNotExist(err)
+}
+
+func init() {
+	if !isFileExists("data.json") {
+		makeJsonFile()
+	}
+}
+
 func main() {
-	makeJsonFile()
 	router := mux.NewRouter()
 	router.Path("/health_check").HandlerFunc(
 		func(w http.ResponseWriter, r *http.Request) { w.WriteHeader(http.StatusOK)},
